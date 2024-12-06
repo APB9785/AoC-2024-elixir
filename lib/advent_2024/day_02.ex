@@ -26,7 +26,7 @@ defmodule Advent2024.Day02 do
     end)
   end
 
-  defp safe?([a | [b | _] = t] = report) do
+  defp safe?([a | [b | _] = t]) do
     case b - a do
       n when n == 0 or n > 3 or n < -3 -> false
       n -> safe?(t, n)
