@@ -3,51 +3,68 @@ defmodule Advent2024.Day04 do
 
   @input Advent2024.get_input_for_day(4)
   @directions [:ne, :n, :nw, :e, :w, :se, :s, :sw]
-  @next_char %{"X" => "M", "M" => "A", "A" => "S"}
 
   def part_1(input \\ @input) do
     input
     |> parse_input()
-    |> count_xmas()
+    |> count_matches(simple_conditions("XMAS"))
   end
 
-  defp count_xmas(map) do
-    map
-    |> Map.keys()
-    |> Enum.map(&count_xmas(&1, map))
-    |> Enum.sum()
+  def part_2(input \\ @input) do
+    input
+    |> parse_input()
+    |> count_matches(part_2_conditions())
   end
 
-  defp count_xmas(coord, map) do
-    if Map.fetch!(map, coord) == "X" do
-      @directions
-      |> Enum.filter(&search?(&1, coord, map, "X"))
-      |> Enum.count()
-    else
-      0
+  # searches one word in a straight line in any direction
+  defp simple_conditions(word) do
+    for d <- @directions do
+      [
+        {:origin, String.at(word, 0)}
+        | for(i <- 1..(String.length(word) - 1), do: {d, i, String.at(word, i)})
+      ]
     end
   end
 
-  defp search?(_, _, _, "S"), do: true
+  # searches for two "MAS" words in the shape of an X
+  defp part_2_conditions do
+    [
+      [{:origin, "A"}, {:nw, 1, "M"}, {:ne, 1, "S"}, {:sw, 1, "M"}, {:se, 1, "S"}],
+      [{:origin, "A"}, {:nw, 1, "M"}, {:ne, 1, "M"}, {:sw, 1, "S"}, {:se, 1, "S"}],
+      [{:origin, "A"}, {:nw, 1, "S"}, {:ne, 1, "S"}, {:sw, 1, "M"}, {:se, 1, "M"}],
+      [{:origin, "A"}, {:nw, 1, "S"}, {:ne, 1, "M"}, {:sw, 1, "S"}, {:se, 1, "M"}]
+    ]
+  end
 
-  defp search?(direction, {x, y}, map, prev) do
-    looking_for = Map.fetch!(@next_char, prev)
+  defp count_matches(map, conditions) do
+    map
+    |> Map.keys()
+    |> Enum.map(fn coord -> Enum.count(conditions, &conditions_met?(&1, coord, map)) end)
+    |> Enum.sum()
+  end
 
-    looking_at =
+  defp conditions_met?(condition_set, coord, map) do
+    Enum.all?(condition_set, &condition_met?(&1, coord, map))
+  end
+
+  defp condition_met?({:origin, char}, coord, map) do
+    Map.get(map, coord) == char
+  end
+
+  defp condition_met?({direction, distance, char}, {x, y}, map) do
+    coord =
       case direction do
-        :ne -> {x + 1, y - 1}
-        :n -> {x, y - 1}
-        :nw -> {x - 1, y - 1}
-        :e -> {x + 1, y}
-        :w -> {x - 1, y}
-        :se -> {x + 1, y + 1}
-        :s -> {x, y + 1}
-        :sw -> {x - 1, y + 1}
+        :ne -> {x + distance, y - distance}
+        :n -> {x, y - distance}
+        :nw -> {x - distance, y - distance}
+        :e -> {x + distance, y}
+        :w -> {x - distance, y}
+        :se -> {x + distance, y + distance}
+        :s -> {x, y + distance}
+        :sw -> {x - distance, y + distance}
       end
 
-    if Map.get(map, looking_at) == looking_for,
-      do: search?(direction, looking_at, map, looking_for),
-      else: false
+    Map.get(map, coord) == char
   end
 
   defp parse_input(txt) do

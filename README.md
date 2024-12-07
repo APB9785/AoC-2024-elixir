@@ -12,3 +12,4 @@ Part 2:  store state between instructions
 
 ### Day 4
 Part 1:  Word search solver (basic)  
+Part 2:  Accept arbitrary complex search conditions  
