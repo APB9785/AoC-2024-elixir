@@ -20,3 +20,6 @@ List sorting
 ### Day 6
 Part 1:  Roomba-style pathing  
 Part 2:  Cycle detection + optimization for many concurrent simulations  
+
+### Day 7
+Permutations  
