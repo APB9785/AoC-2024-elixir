@@ -23,3 +23,6 @@ Part 2:  Cycle detection + optimization for many concurrent simulations
 
 ### Day 7
 Permutations  
+
+### Day 8
+2-D grid calculations  
