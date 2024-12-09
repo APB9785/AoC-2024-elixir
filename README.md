@@ -26,3 +26,6 @@ Permutations
 
 ### Day 8
 2-D grid calculations  
+
+### Day 9
+Data compression, decompression, and optimization  
