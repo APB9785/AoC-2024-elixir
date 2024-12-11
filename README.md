@@ -29,3 +29,6 @@ Permutations
 
 ### Day 9
 Data compression, decompression, and optimization  
+
+### Day 10
+Simple directed graph traversal  
