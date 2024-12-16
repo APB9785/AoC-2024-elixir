@@ -32,3 +32,6 @@ Data compression, decompression, and optimization
 
 ### Day 10
 Simple directed graph traversal  
+
+### Day 11
+Counting and sdtoring frequencies of data over time  
